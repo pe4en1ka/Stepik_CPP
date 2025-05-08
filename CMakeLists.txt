@@ -28,7 +28,8 @@ endforeach()
 
 # Отдельно добавляем main.cpp
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
-    add_executable(main main.cpp)
+    add_executable(main main.cpp
+            1.5_ex_2.cpp)
 endif()
 
 
