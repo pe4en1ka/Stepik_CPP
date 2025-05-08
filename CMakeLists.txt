@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.31)
 project(CLionProjectsStepik_cpp)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
-add_executable(CLionProjectsStepik_cpp main.cpp
+# Создаем список всех исходных файлов
+set(SOURCE_FILES
         1.2_ex_1.cpp
         1.2_ex_2.cpp
         1.3_ex_1.cpp
@@ -35,3 +36,16 @@ add_executable(CLionProjectsStepik_cpp main.cpp
         1.4_ex_13.cpp
         1.4_ex_14.cpp
 )
+set(counter 1)
+foreach(SOURCE_FILE ${SOURCE_FILES})
+    # Получаем имя файла без расширения
+    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
+    # Создаем исполняемый файл с уникальным номером
+    add_executable(exe_${counter}_${FILE_NAME} ${SOURCE_FILE})
+    math(EXPR counter "${counter} + 1")
+endforeach()
+
+
+# Создаем отдельный исполняемый файл для main.cpp
+add_executable(main main.cpp)
+
