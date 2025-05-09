@@ -30,7 +30,8 @@ endforeach()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
     add_executable(main main.cpp
             1.5_ex_2.cpp
-            1.5_ex_3.cpp)
+            1.5_ex_3.cpp
+            1.5_ex_4.cpp)
 endif()
 
 
