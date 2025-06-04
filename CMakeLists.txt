@@ -73,7 +73,8 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
             1.8_ex_3.cpp
             1.8_ex_4.cpp
             1.8_ex_5.cpp
-            1.8_ex_6.cpp)
+            1.8_ex_6.cpp
+            1.8_ex_7.cpp)
 endif()
 
 
