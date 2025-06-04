@@ -8,30 +8,14 @@ int main() {
     // заполнение нулями(не потребуется дополнительно заполнять главную диагональ)
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            arr[i][j] = 0;
-        }
-    }
-    // заполнение правого верхнего угла
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
             if (i == j) {
-                cnt = 1;
-                for (int k = j + 1; k < n; k++) {
-                    arr[i][k] = cnt;
-                    cnt++;
-                }
+                arr[i][j] = 0;
             }
-        }
-    }
-    // заполнение левого нижнего угла
-    for (int i = n - 1; i >= 0; i--) {
-        for (int j = n - 1; j >= 0; j--) {
-            if (i == j) {
-                cnt = 1;
-                for (int k = j - 1; k >= 0; k--) {
-                    arr[i][k] = cnt;
-                    cnt++;
-                }
+            else if (i < j) {
+                arr[i][j] = j - i;
+            }
+            else {
+                arr[i][j] = i - j;
             }
         }
     }
