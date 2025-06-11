@@ -1,95 +1,54 @@
 cmake_minimum_required(VERSION 3.31)
-project(CLionProjectsStepik_cpp)
+project(ClionProjectsStepik.cpp)
+
+# Автоматическая перезагрузка при изменении структуры
+set(CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR})
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.31)
+    cmake_policy(SET CMP0146 NEW)
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Получаем список всех .cpp файлов в директории проекта
-file(GLOB ALL_SOURCE_FILES "*.cpp")
+# Рекурсивно находим все .cpp файлы с автообновлением
+file(GLOB_RECURSE ALL_SOURCE_FILES
+        LIST_DIRECTORIES false
+        CONFIGURE_DEPENDS  # Это обеспечивает автообновление
+        "*.cpp"
+)
 
-# Создаем пустой список для файлов, исключая main.cpp
-set(SOURCE_FILES "")
+# Создаем файл-триггер для перезагрузки
+configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt
+        ${CMAKE_BINARY_DIR}/CMakeLists.txt.copy
+)
 
-# Перебираем все найденные файлы
-foreach(FILE ${ALL_SOURCE_FILES})
-    get_filename_component(FILENAME ${FILE} NAME)
-    # Добавляем в список все файлы, кроме main.cpp
-    if(NOT ${FILENAME} STREQUAL "main.cpp")
-        list(APPEND SOURCE_FILES ${FILE})
+foreach(SOURCE_FILE IN LISTS ALL_SOURCE_FILES)
+    # Получаем относительный путь файла
+    file(RELATIVE_PATH REL_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCE_FILE})
+
+    # Удаляем расширение .cpp
+    string(REGEX REPLACE "\\.cpp$" "" EXECUTABLE_PATH ${REL_PATH})
+
+    # Формируем безопасное имя цели
+    string(REPLACE "." "_" SAFE_TARGET_NAME ${REL_PATH})
+    string(REPLACE "/" "_" SAFE_TARGET_NAME ${SAFE_TARGET_NAME})
+    string(REPLACE " " "_" SAFE_TARGET_NAME ${SAFE_TARGET_NAME})
+    string(REGEX REPLACE "\\.cpp$" "" SAFE_TARGET_NAME ${SAFE_TARGET_NAME})
+
+    # Создаем исполняемый файл
+    if(NOT TARGET ${SAFE_TARGET_NAME})
+        add_executable(${SAFE_TARGET_NAME} ${SOURCE_FILE})
+
+        # Устанавливаем желаемое имя выходного файла
+        set_target_properties(${SAFE_TARGET_NAME} PROPERTIES
+                OUTPUT_NAME "${EXECUTABLE_PATH}"
+        )
+
+        message(STATUS "Added target: ${SAFE_TARGET_NAME} for ${SOURCE_FILE}")
     endif()
 endforeach()
 
-# Нумеруем и создаем исполняемые файлы
-set(counter 1)
-foreach(SOURCE_FILE ${SOURCE_FILES})
-    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
-    add_executable(exe_${counter}_${FILE_NAME} ${SOURCE_FILE})
-    math(EXPR counter "${counter} + 1")
-endforeach()
-
-# Отдельно добавляем main.cpp
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
-    add_executable(main main.cpp
-            1.5_ex_2.cpp
-            1.5_ex_3.cpp
-            1.5_ex_4.cpp
-            1.5_ex_5.cpp
-            1.5_ex_6.cpp
-            1.5_ex_7.cpp
-            1.5_ex_8.cpp
-            1.5_ex_9.cpp
-            1.5_ex_10.cpp
-            1.5_ex_11.cpp
-            1.5_ex_12.cpp
-            1.5_ex_13.cpp
-            1.5_ex_14.cpp
-            1.6_ex_1.cpp
-            1.6_ex_2.cpp
-            1.6_ex_3.cpp
-            1.6_ex_4.cpp
-            1.6_ex_5.cpp
-            1.6_ex_6.cpp
-            1.6_ex_7.cpp
-            1.6_ex_8.cpp
-            1.6_ex_9.cpp
-            1.6_ex_10.cpp
-            1.6_ex_11.cpp
-            1.6_ex_12.cpp
-            1.7_ex_1.cpp
-            1.7_ex_2.cpp
-            1.7_ex_3.cpp
-            1.7_ex_4.cpp
-            1.7_ex_5.cpp
-            1.7_ex_6.cpp
-            1.7_ex_7.cpp
-            1.7_ex_8.cpp
-            1.7_ex_9.cpp
-            1.7_ex_10.cpp
-            1.7_ex_11.cpp
-            1.7_ex_12.cpp
-            1.7_ex_13.cpp
-            1.7_ex_14.cpp
-            1.8_ex_1.cpp
-            1.8_ex_2.cpp
-            1.8_ex_3.cpp
-            1.8_ex_4.cpp
-            1.8_ex_5.cpp
-            1.8_ex_6.cpp
-            1.8_ex_7.cpp
-            1.8_ex_8.cpp
-            1.8_ex_9.cpp
-            1.8_ex_10.cpp
-            1.8_ex_11.cpp
-            1.8_ex_12.cpp
-            1.8_ex_13.cpp
-            1.9_ex_1.cpp
-            1.9_ex_2.cpp
-            1.9_ex_3.cpp
-            1.9_ex_4.cpp
-            1.9_ex_5.cpp
-            1.9_ex_6.cpp
-            1.9_ex_7.cpp
-            1.9_ex_8.cpp
-            1.9_ex_9.cpp)
-endif()
-
-
+# Дополнительная проверка для новых файлов
+list(LENGTH ALL_SOURCE_FILES NUM_SOURCE_FILES)
+message(STATUS "Total source files detected: ${NUM_SOURCE_FILES}")
