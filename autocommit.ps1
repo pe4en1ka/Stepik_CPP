@@ -71,7 +71,7 @@ try {
 
         # Пуш изменений
         Log "Отправляем изменения..."
-        & $GitPath push origin HEAD -f
+        & $GitPath push origin MIPT -f
         if (-not $?) {
             Log "Ошибка при отправке изменений"
         }
