@@ -1,6 +1,10 @@
 import os
 import subprocess
 import sys
+import locale
+
+# Определяем кодировку консоли
+ENCODING = locale.getpreferredencoding()
 
 # Явное указание пути к Git
 GIT_PATH = r"C:\Program Files\Git\bin\git.exe"
@@ -8,11 +12,12 @@ GIT_PATH = r"C:\Program Files\Git\bin\git.exe"
 # Путь к корню репозитория (где находится .git)
 REPO_ROOT = r"C:\Users\tmame\MIPT_cpp"
 
-# Путь к директории проекта (где находятся ваши файлы)
-PROJECT_DIR = r"C:\Users\tmame\MIPT_cpp"
-
 def log(message):
-    print(f"[AUTOCOMMIT] {message}")
+    # Кодируем сообщение в кодировку консоли
+    try:
+        print(message.encode(ENCODING, errors='replace').decode(ENCODING))
+    except:
+        print(message)
 
 def run_command(command, cwd=None):
     """Выполняет команду и возвращает результат"""
@@ -27,7 +32,7 @@ def run_command(command, cwd=None):
             cwd=cwd,
             capture_output=True,
             text=True,
-            encoding='utf-8',
+            encoding=ENCODING,  # Используем системную кодировку
             errors='replace'
         )
 
@@ -50,15 +55,15 @@ def main():
             return
 
         # Проверяем существование репозитория
-        if not os.path.exists(os.path.join(REPO_ROOT, ".git")):
-            log(f"Ошибка: {REPO_ROOT} не является репозиторием Git")
+        git_dir = os.path.join(REPO_ROOT, ".git")
+        if not os.path.exists(git_dir):
+            log(f"Ошибка: {REPO_ROOT} не является репозиторием Git (папка .git не найдена)")
             return
 
-        # Переходим в директорию проекта
-        log(f"Рабочая директория проекта: {PROJECT_DIR}")
+        log(f"Рабочая директория репозитория: {REPO_ROOT}")
 
-        # 1. Добавляем все изменения из директории проекта в репозиторий
-        add_result = run_command([GIT_PATH, "add", "--all", PROJECT_DIR])
+        # 1. Добавляем все изменения в репозитории
+        add_result = run_command([GIT_PATH, "add", "--all", "."])
         if not add_result or add_result.returncode != 0:
             log("Ошибка при добавлении файлов в Git")
             return
@@ -78,7 +83,7 @@ def main():
                 continue
 
             # Полный путь к файлу
-            full_path = os.path.join(PROJECT_DIR, file)
+            full_path = os.path.join(REPO_ROOT, file)
 
             # Проверяем существование файла
             if not os.path.exists(full_path):
@@ -107,7 +112,7 @@ def main():
             # Если коммит успешен - пушим
             if commit_result and commit_result.returncode == 0:
                 log("Коммит успешен. Отправляю изменения...")
-                push_result = run_command([GIT_PATH, "push", "origin", "MIPT", "-f"])
+                push_result = run_command([GIT_PATH, "push", "origin", "HEAD", "-f"])
             else:
                 log(f"Ошибка при коммите файла {filename}")
 
