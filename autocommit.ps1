@@ -1,8 +1,8 @@
-#Requires -Version 5
+﻿#Requires -Version 5
 $ErrorActionPreference = "Stop"
 
 # Настройки
-$RepoPath = "C:\Users\tmame\MIPT_cpp\Stepik_CPP"
+$RepoPath = "C:\Users\tmame\MIPT_cpp"
 $GitPath = "C:\Program Files\Git\bin\git.exe"
 
 function Log {
@@ -12,7 +12,7 @@ function Log {
 
 try {
     # Проверка существования репозитория
-    if (-not (Test-Path "$RepoPath\.git")) {
+    if (-not (Test-Path (Join-Path $RepoPath ".git"))) {
         Log "Ошибка: Репозиторий не найден"
         exit 1
     }
@@ -42,9 +42,6 @@ try {
     }
 
     Log "Найдено файлов для коммита: $($stagedFiles.Count)"
-    $stagedFiles | ForEach-Object {
-        Log "Файл: $_"
-    }
 
     # Коммитим каждый файл отдельно
     foreach ($file in $stagedFiles) {
@@ -56,7 +53,7 @@ try {
 
         $fileName = [System.IO.Path]::GetFileName($file)
         $isCpp = $file -match '\.cpp$'
-        
+
         if ($isCpp) {
             $commitMessage = $fileName
             Log "Коммитим CPP файл: $fileName"
