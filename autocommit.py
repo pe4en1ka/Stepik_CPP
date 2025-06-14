@@ -107,7 +107,7 @@ def main():
             # Если коммит успешен - пушим
             if commit_result and commit_result.returncode == 0:
                 log("Коммит успешен. Отправляю изменения...")
-                push_result = run_command([GIT_PATH, "push", "origin", "HEAD", "-f"])
+                push_result = run_command([GIT_PATH, "push", "origin", "MIPT", "-f"])
             else:
                 log(f"Ошибка при коммите файла {filename}")
 
