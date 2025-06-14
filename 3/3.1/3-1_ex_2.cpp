@@ -1,3 +1,6 @@
-//
-// Created by tmame on 6/15/2025.
-//
+#include <iostream>
+using namespace std;
+
+int main() {
+
+}
