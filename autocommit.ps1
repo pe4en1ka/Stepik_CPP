@@ -1,88 +1,63 @@
-﻿#Requires -Version 5
+﻿# Minimal PowerShell autocommit script
+#Requires -Version 5
 $ErrorActionPreference = "Stop"
 
-# Настройки
+# Configuration
 $RepoPath = "C:\Users\tmame\MIPT_cpp"
 $GitPath = "C:\Program Files\Git\bin\git.exe"
+$SshKeyPath = Join-Path $env:USERPROFILE ".ssh\github_rsa"
 
-function Log {
-    param([string]$Message)
-    Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] $Message" -ForegroundColor Cyan
+# Simple logging function
+function Write-Log {
+    param([string]$msg)
+    Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] $msg"
 }
 
 try {
-    # Проверка существования репозитория
-    if (-not (Test-Path (Join-Path $RepoPath ".git"))) {
-        Log "Ошибка: Репозиторий не найден"
-        exit 1
-    }
+    # SSH key setup
+    if (-not (Test-Path $SshKeyPath)) {
+        $sshDir = [System.IO.Path]::GetDirectoryName($SshKeyPath)
+        if (-not (Test-Path $sshDir)) {
+            New-Item -ItemType Directory -Path $sshDir -Force | Out-Null
+        }
 
-    Set-Location -Path $RepoPath
-
-    # Проверка доступности Git
-    & $GitPath --version
-    if (-not $?) {
-        Log "Ошибка: Git не доступен"
-        exit 1
-    }
-
-    # Добавляем все изменения
-    Log "Добавляем изменения в staging..."
-    & $GitPath add --all .
-    if (-not $?) {
-        Log "Ошибка при добавлении файлов"
-        exit 1
-    }
-
-    # Получаем список добавленных файлов
-    $stagedFiles = & $GitPath diff --name-only --cached
-    if (-not $stagedFiles) {
-        Log "Нет изменений для коммита"
+        Start-Process ssh-keygen -ArgumentList "-t rsa -b 4096 -f `"$SshKeyPath`" -N `"`"`" -q" -Wait
+        Write-Log "SSH key generated. Add to GitHub:"
+        Write-Log (Get-Content "$SshKeyPath.pub")
+        Write-Log "After adding key, rerun script"
         exit 0
     }
 
-    Log "Найдено файлов для коммита: $($stagedFiles.Count)"
+    # Repository check
+    Set-Location $RepoPath
+    if (-not (Test-Path ".git")) { throw "Repository not found" }
 
-    # Коммитим каждый файл отдельно
-    foreach ($file in $stagedFiles) {
-        $fullPath = Join-Path $RepoPath $file
-        if (-not (Test-Path $fullPath)) {
-            Log "Файл не существует: $fullPath"
-            continue
-        }
+    # Git operations
+    & $GitPath add --all .
+    $staged = & $GitPath diff --name-only --cached
 
-        $fileName = [System.IO.Path]::GetFileName($file)
-        $isCpp = $file -match '\.cpp$'
+    if (-not $staged) { exit 0 }
 
-        if ($isCpp) {
-            $commitMessage = $fileName
-            Log "Коммитим CPP файл: $fileName"
-        } else {
-            $commitMessage = "Trash"
-            Log "Коммитим файл: $fileName (Trash)"
-        }
+    foreach ($file in $staged) {
+        $name = [System.IO.Path]::GetFileName($file)
+        $msg = if ($file -match '\.(cpp|cxx|cc|h|hpp)$') { $name } else { "Trash" }
 
-        # Коммит файла
-        & $GitPath commit -m $commitMessage -- $file
-        if (-not $?) {
-            Log "Ошибка при коммите файла $fileName"
-            continue
-        }
-
-        # Пуш изменений
-        Log "Отправляем изменения..."
-        & $GitPath push origin MIPT -f
-        if (-not $?) {
-            Log "Ошибка при отправке изменений"
-        }
+        & $GitPath commit -m $msg -- $file
     }
 
-    Log "Выполнение завершено успешно"
+    # Push with SSH
+    $env:GIT_SSH_COMMAND = "ssh -i `"$SshKeyPath`" -o IdentitiesOnly=yes"
+    & $GitPath push origin MIPT -f
+
+    Write-Log "Operation completed"
 }
 catch {
-    Log "КРИТИЧЕСКАЯ ОШИБКА: $_"
+    Write-Log "ERROR: $_"
     exit 1
 }
+finally {
+    Remove-Item env:\GIT_SSH_COMMAND -ErrorAction Ignore
+    Set-Location $PSScriptRoot
+}
 
-# Задержка для просмотра результатов
-Read-Host "Нажмите Enter для выхода"
+Read-Host "Press Enter to exit"
