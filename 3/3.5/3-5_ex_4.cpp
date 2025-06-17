@@ -3,7 +3,9 @@ using namespace std;
 
 void strange_sort(int n, int a[]) {
     if (n == 1) {
-        cout << a[0] << " ";
+        if (not sizeof(a) == 0) {
+            cout << a[0] << " ";
+        }
         return;
     }
     int tmp[n / 2];
