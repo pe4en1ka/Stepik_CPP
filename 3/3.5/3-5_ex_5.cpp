@@ -1,21 +1,12 @@
 #include <iostream>
 using namespace std;
 
-int duna(int n, int cnt) {
-    int c;
-    cnt++;
-    if (n < 3) {
-        return 0;
-    }
-    else {
-        c += duna(n - 1, cnt);
-        c += duna(n - 2);
-    }
-    return cnt;
+int duna(int n) {
+
 }
 
 int main() {
-    int n;
+    int n, cnt = 0;
     cin >> n;
     cout << duna(n);
 }
