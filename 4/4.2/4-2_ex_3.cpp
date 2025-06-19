@@ -2,9 +2,12 @@
 using namespace std;
 
 void f(int &a, int &b, int &c) {
-    c = 2b
+    c = 2 * b - a;
 }
 
 int main() {
-    //put yr code here
+    int a, b, c;
+    cin >> a >> b >> c;
+    f(a, b, c);
+    cout << a << ' ' << b << ' ' << c;
 }
