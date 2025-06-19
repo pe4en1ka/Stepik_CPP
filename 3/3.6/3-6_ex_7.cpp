@@ -7,8 +7,14 @@ void f(int a, int b) {
     if (sym == '.') {
         return;
     }
-    cout << sym;
-    cout << "*";
+    if (a == -1) {
+        cout << sym;
+        a++;
+
+    }
+    else {
+        cout << "*" << sym;
+    }
     f(a, b);
 }
 
