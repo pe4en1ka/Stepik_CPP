@@ -11,7 +11,11 @@ struct my_time {
             second = t % 60;
         }
         else {
-            day = 
+            day = t / 86400 - 1 + !(t % 86400);
+            t = day * (-1) * 86400 + t;
+            hour = t / 3600 % 24;
+            minute = t / 60 % 60;
+            second = t % 60;
         }
     }
 };
