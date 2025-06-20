@@ -6,48 +6,32 @@ struct node {
     int val;
 };
 
-node* merge(node *frst, node *second) {
-    node m[20];
-    for (int i = 0; i < 20; i++) {
-        m[i].val = 0;
-        if (i == 19) {m[i].next = nullptr; continue; }
-        else {m[i].next = m + i + 1;}
-    }
-    node *b_m = m;
-    b_m = m;
-    node *mm = b_m;
+node* merge(node* frst, node* second) {
+    // Фиктивная начальная нода для упрощения логики
+    node dummy;
+    node* current = &dummy;
+    dummy.next = nullptr;
+
+    // Основной цикл слияния
     while (frst != nullptr && second != nullptr) {
-        if ((frst -> val) <= (second -> val)) {
-            (b_m -> val) = (frst -> val);
-            frst = frst -> next;
-            if (frst == nullptr) {
-                b_m = b_m -> next;
-                break;
-            }
+        if (frst->val <= second->val) {
+            current->next = frst;
+            frst = frst->next;
         } else {
-            (b_m -> val) = (second -> val);
-            second = second -> next;
-            if (second == nullptr) {
-                b_m = b_m -> next;
-                break;
-            }
+            current->next = second;
+            second = second->next;
         }
-        b_m = b_m -> next;
-    }
-    // Копируем оставшиеся элементы из первого массива
-    while (frst != nullptr) {
-        (b_m -> val) = (frst -> val) ;
-        frst = frst -> next;
-        b_m = b_m -> next;
+        current = current->next;
     }
 
-    // Копируем оставшиеся элементы из второго массива
-    while (second != nullptr) {
-        (b_m -> val) = (second -> val);
-        second = second -> next;
-        b_m = b_m -> next;
+    // Присоединяем остаток
+    if (frst != nullptr) {
+        current->next = frst;
+    } else {
+        current->next = second;
     }
-    return mm;
+
+    return dummy.next;
 }
 
 int main() {
@@ -67,5 +51,10 @@ int main() {
         if (i == q - 1) { second[i].next = nullptr; continue; }
         else { second[i].next = second + i + 1; }
     }
-    cout << merge(frst, second);
+    node *current = merge(frst, second);
+    while (current != nullptr) {
+        cout << current -> val << " ";
+        current = current -> next;
+    }
+    cout << endl;
 }
