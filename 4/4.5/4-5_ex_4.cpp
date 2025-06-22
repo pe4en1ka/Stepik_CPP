@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
-class structs {
-    struct my_time {
+
+struct my_time {
     int day, hour, minute, second;
 
     my_time(int seconds) {
@@ -27,15 +27,17 @@ class structs {
     my_time(int d, int h, int min, int sec)
         : day(d), hour(h), minute(min), second(sec) {}
 
-    [[nodiscard]] int covert_to_sec() const {
+    [[nodiscard]] int convert_to_sec() const {
         return day * 86400 + hour * 3600 + minute * 60 + second;
     }
 
-    };
-    my_time operator - (my_time mt1, my_time mt2) const {
-        return my_time(mt1.covert_to_sec() - mt2.covert_to_sec());
+};
+
+my_time operator - (my_time mt1, my_time mt2) {
+        return my_time(mt1.convert_to_sec() - mt2.convert_to_sec());
     }
-    struct house {
+
+struct house {
 
 
     int floors;
@@ -44,14 +46,17 @@ class structs {
 
     house (int fl, int res, my_time bt)
         : floors(fl), residents(res), build_time(bt) {}
-    };
-    bool operator == (house a, house b) const {
-        
-    }
 };
 
+bool operator == (house a, house b) {
+        return a.floors == b.floors && a.residents == b.residents && (a.build_time.convert_to_sec() - b.build_time.convert_to_sec() <= 600);
+}
+
+bool operator != (house a, house b) {
+        return a.floors != b.floors || a.residents != b.residents || (a.build_time.convert_to_sec() - b.build_time.convert_to_sec() > 600);
+}
 
 
 int main() {
-
+    
 }
