@@ -23,15 +23,21 @@ struct my_time {
     my_time()
         : day(0), hour(0), minute(0), second(0)
     {}
-    int covert_to_sec() {
+
+    my_time(int d, int h, int min, int sec)
+        : day(d), hour(h), minute(min), second(sec) {}
+
+    [[nodiscard]] int covert_to_sec() const {
         return day * 86400 + hour * 3600 + minute * 60 + second;
     }
+
 };
 
 my_time operator - (my_time mt1, my_time mt2) {
-    my_time result;
+    return my_time(mt1.covert_to_sec() - mt2.covert_to_sec());
 }
 
 int main() {
-    //put yr code here
+    my_time mytime {-1, 23, 59, 55};
+    cout << mytime.covert_to_sec() << endl;
 }
