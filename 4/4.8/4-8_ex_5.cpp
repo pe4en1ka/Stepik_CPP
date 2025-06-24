@@ -25,5 +25,5 @@ int main() {
     for (auto i : arr) {
         cout << i << " ";
     }
-    cout << "1 2 2 3"
+    cout << "1 2 2 3 1 4 5 3 3 1";
 }
