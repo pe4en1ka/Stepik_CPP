@@ -14,8 +14,11 @@ int main() {
                     wrds++;
                     tmp = "";
                 }
-                else if (tmp == " ") {
+                else if (tmp == " " && line[i] == ' ') {
                     tmp = "";
+                }
+                else if (tmp.empty()) {
+                    continue;
                 }
                 else {
                     tmp += line[i];
