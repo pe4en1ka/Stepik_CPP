@@ -9,7 +9,10 @@ struct Int {
         : val(0) {}
     Int(int a)
         : val(a) {}
+    Int operator + (Int a, Int b) {
+        int sum = (int) a + (int) b;
 
+    }
 };
 
 int main() {
