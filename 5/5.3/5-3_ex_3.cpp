@@ -2,15 +2,16 @@
 using namespace std;
 
 int main() {
-    unsigned long long n;
+    unsigned long long n, x;
     cin >> n;
     if (n % 3 == 0) {
-        cout << n / 3;
+        x = n / 3;
     }
-    else if (n % 3 == 1) {
-        cout << (n + 2 * 18446744073709551615) / 3;
+    else if (n % 3 == 2) {
+        x = 6148914691236517205 + ((n + 1) / 3);
     }
     else {
-        cout << (n + 18446744073709551615) / 3;
+        x = 12297829382473034410 + ((n + 2) / 3);
     }
+    cout << x;
 }
