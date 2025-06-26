@@ -11,7 +11,7 @@ int main() {
     cin >> n;
     int i = static_cast<int> (n.size());
     int j = i - 1;
-    vector <bool> two;
+    vector <bool> two(i * 4, false);
     while (!n.empty()) {
         char dig = n[i - 1];
         int dec;
