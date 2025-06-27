@@ -5,6 +5,10 @@ using namespace std;
 int main() {
     unsigned long long a;
     cin >> a;
+    if (a == 0) {
+        cout << 0;
+        return 0;
+    }
     unsigned long long m = a;
     vector <bool> bin;
     while (m >= 2) {
