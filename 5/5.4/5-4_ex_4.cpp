@@ -3,9 +3,9 @@
 using namespace std;
 
 int main() {
-    long long a;
+    unsigned long long a;
     cin >> a;
-    long long m = a;
+    unsigned long long m = a;
     vector <bool> bin;
     while (m >= 2) {
         bin.insert(bin.begin(), m % 2);
@@ -13,7 +13,6 @@ int main() {
     }
     bin.insert(bin.begin(), m);
     auto bits = static_cast<long long> (bin.size());
-    
-    for ()
-    cout <<
+    unsigned long long res = (1ULL << bits) - 1;
+    cout << res - a;
 }
