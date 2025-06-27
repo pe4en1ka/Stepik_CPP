@@ -128,7 +128,7 @@ try {
     # Отправка изменений
     Log "Отправляем изменения..."
     $env:GIT_TERMINAL_PROMPT = "0"
-    & $GitPath push origin MIPT#1 -f
+    & $GitPath push MIPT#1 -f
     if (-not $?) {
         Log "Ошибка при отправке изменений"
         exit 1
