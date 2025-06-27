@@ -1,7 +1,7 @@
 ﻿#Requires -Version 7
 $ErrorActionPreference = "Stop"
 
-$RepoPath = "C:\Users\tmame\SportProg_1"
+$RepoPath = "C:\Users\tmame\MIPT#1"
 $GitPath = "C:\Program Files\Git\bin\git.exe"
 $SshKeyPath = "C:\Users\tmame\.ssh\github_rsa"
 $SshAgentPath = "C:\Program Files\Git\usr\bin\ssh-agent.exe"
@@ -128,7 +128,7 @@ try {
     # Отправка изменений
     Log "Отправляем изменения..."
     $env:GIT_TERMINAL_PROMPT = "0"
-    & $GitPath push MIPT#1 -f
+    & $GitPath push origin MIPT#1 -f
     if (-not $?) {
         Log "Ошибка при отправке изменений"
         exit 1
