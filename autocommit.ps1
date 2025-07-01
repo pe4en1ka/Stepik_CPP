@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoPath = "C:\Users\tmame\MIPT_1"
 $GitPath = "C:\Program Files\Git\bin\git.exe"
-$GitHubToken = "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"  # ЗАМЕНИТЕ НА РЕАЛЬНЫЙ ТОКЕН
+$GitHubToken = "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"  # ЗАМЕНИТЕ НА РЕАЛЬНЫЙ ТОКЕН
 $GitHubUser = "pe4en1ka"  # Ваш реальный GitHub username
 $RepoName = "Stepik_CPP"   # Реальное название репозитория
 $BranchName = "MIPT_1"       # Основная ветка (проверьте в репозитории)
