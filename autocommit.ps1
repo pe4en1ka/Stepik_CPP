@@ -3,9 +3,9 @@ $ErrorActionPreference = "Stop"
 
 $RepoPath = "C:\Users\tmame\MIPT#1"
 $GitPath = "C:\Program Files\Git\bin\git.exe"
-$SshKeyPath = "C:\Users\tmame\.ssh\github_rsa"
-$SshAgentPath = "C:\Program Files\Git\usr\bin\ssh-agent.exe"
-$SshAddPath = "C:\Program Files\Git\usr\bin\ssh-add.exe"
+$GitHubToken = "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"  # ЗАМЕНИТЕ НА РЕАЛЬНЫЙ ТОКЕН
+$GitHubUser = "tmame"  # Ваш GitHub username
+$RepoName = "MIPT#1"   # Название репозитория
 
 function Log {
     param([string]$Message)
@@ -13,49 +13,14 @@ function Log {
     Write-Host "[$timestamp] $Message" -ForegroundColor Cyan
 }
 
-function Initialize-SshKey {
-    $sshDir = Split-Path $SshKeyPath
-    if (-not (Test-Path $sshDir)) {
-        Log "Создаем папку .ssh..."
-        New-Item -ItemType Directory -Path $sshDir -Force | Out-Null
-    }
-
-    # Удаляем старые ключи, если существуют
-    if (Test-Path $SshKeyPath) {
-        Remove-Item $SshKeyPath -Force
-    }
-    if (Test-Path "$SshKeyPath.pub") {
-        Remove-Item "$SshKeyPath.pub" -Force
-    }
-
-    Log "Генерируем SSH-ключ..."
-    # Автоматически подтверждаем перезапись
-    & "ssh-keygen" -t rsa -b 4096 -f $SshKeyPath -N '""' -q
-
-    # Запускаем ssh-agent
-    if (Test-Path $SshAgentPath) {
-        Start-Process $SshAgentPath -WindowStyle Hidden
-        Start-Sleep -Seconds 1
-
-        # Добавляем ключ
-        if (Test-Path $SshAddPath) {
-            & $SshAddPath $SshKeyPath
-        }
-    }
-
-    $publicKey = Get-Content "$SshKeyPath.pub"
-    Log "`n!!! ДОБАВЬТЕ ЭТОТ КЛЮЧ В GITHUB !!!"
-    Log "Перейдите: https://github.com/settings/ssh/new"
-    Log "Ключ: $publicKey"
-    Log "`nПосле добавления ключа запустите скрипт снова"
-    exit 0
-}
+# Инструкция по получению токена:
+# 1. Перейдите: https://github.com/settings/tokens
+# 2. Создайте токен с правами "repo" (полный доступ к репозиториям)
+# 3. Скопируйте токен (начинается с ghp_)
+# 4. Вставьте его в строку $GitHubToken выше
 
 try {
-    if (-not (Test-Path $SshKeyPath)) {
-        Initialize-SshKey
-    }
-
+    # Проверка репозитория
     if (-not (Test-Path (Join-Path $RepoPath ".git"))) {
         Log "Ошибка: Репозиторий не найден"
         exit 1
@@ -63,86 +28,60 @@ try {
 
     Set-Location -Path $RepoPath
 
-    # Явно указываем путь к SSH
-    $sshPath = "C:\Program Files\Git\usr\bin\ssh.exe"
-    $env:GIT_SSH_COMMAND = "`"$sshPath`" -i `"$SshKeyPath`" -o IdentitiesOnly=yes"
+    # Настройка Git
+    & $GitPath config --global user.name "Auto Committer"
+    & $GitPath config --global user.email "auto@commit"
+    & $GitPath remote set-url origin "https://$GitHubToken@github.com/$GitHubUser/$RepoName.git"
 
-    & $GitPath --version
+    # Проверка Git
+    & $GitPath --version | Out-Null
     if (-not $?) {
         Log "Ошибка: Git не доступен"
         exit 1
     }
 
-    # ПРАВИЛЬНАЯ ПРОВЕРКА SSH
-    Log "Проверяем SSH-подключение к GitHub..."
-    $sshTest = & $sshPath -T git@github.com -i $SshKeyPath -o StrictHostKeyChecking=no 2>&1 | Out-String
-
-    if ($sshTest -match "successfully authenticated") {
-        Log "SSH подключение успешно"
-    } else {
-        Log "Ошибка SSH: $sshTest"
-        Initialize-SshKey
-    }
-
-    # Добавляем изменения
-    Log "Добавляем изменения в staging..."
+    # Добавление изменений
+    Log "Добавляем изменения..."
     & $GitPath add --all .
     if (-not $?) {
         Log "Ошибка при добавлении файлов"
         exit 1
     }
 
-    $stagedFiles = & $GitPath diff --name-only --cached
-    if (-not $stagedFiles) {
+    # Проверка изменений
+    $status = & $GitPath status --porcelain
+    if (-not $status) {
         Log "Нет изменений для коммита"
         exit 0
     }
 
-    Log "Найдено файлов для коммита: $($stagedFiles.Count)"
+    Log "Найдено изменений: $($status.Count)"
 
-    # Коммит файлов
-    foreach ($file in $stagedFiles) {
-        $fullPath = Join-Path $RepoPath $file
-        if (-not (Test-Path $fullPath)) {
-            Log "Файл не существует: $fullPath"
-            continue
-        }
-
-        $fileName = [System.IO.Path]::GetFileName($file)
-        $isCpp = $file -match '\.(cpp|cxx|cc|h|hpp)$'
-
-        if ($isCpp) {
-            $commitMessage = $fileName
-            Log "Коммитим CPP файл: $fileName"
-        } else {
-            $commitMessage = "Trash"
-            Log "Коммитим файл: $fileName (Trash)"
-        }
-
-        & $GitPath commit -m $commitMessage -- $file
-        if (-not $?) {
-            Log "Ошибка при коммите файла $fileName"
-        }
+    # Коммит изменений
+    Log "Создаем коммит..."
+    & $GitPath commit -m "Автоматический коммит"
+    if (-not $?) {
+        Log "Ошибка при создании коммита"
+        exit 1
     }
 
     # Отправка изменений
     Log "Отправляем изменения..."
-    $env:GIT_TERMINAL_PROMPT = "0"
     & $GitPath push origin MIPT#1 -f
     if (-not $?) {
         Log "Ошибка при отправке изменений"
+        Log "Совет: Попробуйте заменить # на %23 в названии репозитория"
+        Log "Выполните вручную:"
+        Log "git remote set-url origin `"https://$GitHubToken@github.com/$GitHubUser/MIPT%231.git`""
+        Log "git push origin MIPT#1 -f"
         exit 1
     }
 
-    Log "Выполнение завершено успешно"
+    Log "УСПЕХ: Изменения отправлены!"
 }
 catch {
     Log "КРИТИЧЕСКАЯ ОШИБКА: $_"
     exit 1
-}
-finally {
-    Remove-Item env:\GIT_TERMINAL_PROMPT -ErrorAction Ignore
-    Remove-Item env:\GIT_SSH_COMMAND -ErrorAction Ignore
 }
 
 Read-Host "Нажмите Enter для выхода"
