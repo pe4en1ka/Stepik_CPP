@@ -1,7 +1,7 @@
 ﻿#Requires -Version 7
 $ErrorActionPreference = "Stop"
 
-$RepoPath = "C:\Users\tmame\MIPT#1"
+$RepoPath = "C:\Users\tmame\MIPT_1"
 $GitPath = "C:\Program Files\Git\bin\git.exe"
 $GitHubToken = "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"  # ЗАМЕНИТЕ НА РЕАЛЬНЫЙ ТОКЕН
 $GitHubUser = "tmame"  # Ваш GitHub username
