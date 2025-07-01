@@ -67,13 +67,13 @@ try {
 
     # Отправка изменений
     Log "Отправляем изменения..."
-    & $GitPath push origin MIPT#1 -f
+    & $GitPath push origin MIPT_1 -f
     if (-not $?) {
         Log "Ошибка при отправке изменений"
         Log "Совет: Попробуйте заменить # на %23 в названии репозитория"
         Log "Выполните вручную:"
         Log "git remote set-url origin `"https://$GitHubToken@github.com/$GitHubUser/MIPT%231.git`""
-        Log "git push origin MIPT#1 -f"
+        Log "git push origin MIPT_1 -f"
         exit 1
     }
 
