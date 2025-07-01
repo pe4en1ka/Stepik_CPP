@@ -58,6 +58,8 @@ int main() {
     cin >> x;
     ld l = x - cd;
     ld r = x + cd;
+
+    
     for (int i = 0; i < 100; i++) {
         ld mid = (l + r) / 2.0;
         if (dis(mid) < cd) {
