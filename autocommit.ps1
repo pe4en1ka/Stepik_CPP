@@ -5,7 +5,7 @@ $RepoPath = "C:\Users\tmame\MIPT_1"
 $GitPath = "C:\Program Files\Git\bin\git.exe"
 $GitHubToken = "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"  # ЗАМЕНИТЕ НА РЕАЛЬНЫЙ ТОКЕН
 $GitHubUser = "tmame"  # Ваш GitHub username
-$RepoName = "MIPT_1"   # Название репозитория
+$RepoName = "Stepik_CPP"   # Название репозитория
 
 function Log {
     param([string]$Message)
