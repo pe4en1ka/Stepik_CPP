@@ -6,7 +6,7 @@ $GitPath = "C:\Program Files\Git\bin\git.exe"
 $GitHubToken = "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"  # ЗАМЕНИТЕ НА РЕАЛЬНЫЙ ТОКЕН
 $GitHubUser = "pe4en1ka"  # Ваш реальный GitHub username
 $RepoName = "Stepik_CPP"   # Реальное название репозитория
-$BranchName = "main"       # Основная ветка (проверьте в репозитории)
+$BranchName = "MIPT_1"       # Основная ветка (проверьте в репозитории)
 
 function Log {
     param([string]$Message)
