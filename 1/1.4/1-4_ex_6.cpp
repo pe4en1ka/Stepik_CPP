@@ -2,22 +2,16 @@
 using namespace std;
 #define ull unsigned long long
 
-constexpr int MAXN = 10050;
+constexpr ull MAXN = 10500;
 ull n, k;
 ull a[MAXN];
 
-ull amnt_of_cows(ull dis) {
-    int l = 0;
-    auto r = static_cast<int> (n - 1);
-    int cows = 2;
-    for (int i = 1; i < n - 1; i++) {
-        if (a[i] - a[l] >= dis && a[r] - a[i] >= dis) {
-            l = i;
-            cows++;
-        }
+ull ropes(ull len) {
+    ull amnt = 0;
+    for (int i = 0; i < n; i++) {
+        amnt += a[i] / len;
     }
-    return cows;
-
+    return amnt;
 }
 
 int main() {
@@ -30,10 +24,15 @@ int main() {
         cin >> a[i];
     }
     ull l = 0;
-    ull r = a[n - 1] - a[0] + 1;
+    ull r = 1e+9 + 1;
+    ull amnt = 0;
+    for (int i = 0; i < n; i++) {
+        amnt += a[i];
+    }
+    if (amnt < k) { cout << 0; return 0; }
     for (int i = 0; i < 100; i++) {
         ull mid = (l + r) / 2;
-        if (amnt_of_cows(mid) < k) {
+        if (ropes(mid) < k) {
             r = mid;
         }
         else {
