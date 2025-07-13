@@ -29,5 +29,13 @@ int main() {
 
     ull a, b;
     cin >> a >> b;
-    
+    ull nod = gsd(a, b);
+    a /= nod;
+    ull nok = a * b;
+    if (nok / b == a && nok <= 1e18) {
+        cout << nok;
+    }
+    else {
+        cout << -1;
+    }
 }
