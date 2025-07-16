@@ -33,4 +33,9 @@ int main() {
     else {
         rev = (x % m + m) % m;
     }
+    ll sum = n;
+    for (ll i = n - 1; i >= 0; i--) {
+        sum = ((sum % m * rev) % m + m) % m + i;
+    }
+    cout << sum;
 }
