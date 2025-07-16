@@ -3,7 +3,8 @@ using namespace std;
 #define ll long long
 
 constexpr ll mod = 1e9 + 7;
-
+constexpr int MAXN = 1000050;
+ll a[MAXN];
 ll f(ll n) {
     ll res = 1;
     for (ll i = 2; i <= n; i++) {
@@ -36,21 +37,28 @@ int main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
+
     ll n, m, l;
     cin >> n >> m >> l;
+
     if (n < m) {
         cout << 0;
         return 0;
     }
     else {
-        ll sum = 0;
         ll fac_n = f(n);
+        ll fac_m = f(m);
+        ll fac_nm = f(n - m);
+        ll c_f = Mdiv(fac_n, Mmult(fac_m, fac_nm));
+        a[m - 1] = c_f;
+        ll q = m;
+        for (ll i  = m; i <= n; i++) {
+            a[i] = Mdiv(Mmult(a[i - 1], (n - q) % mod), (q + 1) % mod);
+            q++;
+        }
+        ll sum = 0;
         for (ll k = 1; k <= l && m * k <= n; k++) {
-            ll fac_mk = f(m * k);
-            ll fac_nmk = f(n - m * k);
-            sum = (sum + Mdiv(fac_n, Mmult(fac_mk, fac_nmk))) % mod;
-
-
+            sum = (sum + a[m * k - 1]) % mod;
         }
         cout << sum % mod;
         return 0;
