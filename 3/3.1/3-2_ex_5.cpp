@@ -35,8 +35,8 @@ int main() {
         if (a[i]) {
             dp[i] = 0;
         }
-        sl_win = (sl_win % MOD - dp[i - k] % MOD) % MOD;
-        sl_win = (sl_win % MOD + dp[i] % MOD) % MOD;
+        sl_win = ((sl_win % MOD - dp[i - k] % MOD) % MOD + MOD) % MOD;
+        sl_win = ((sl_win % MOD + dp[i] % MOD) % MOD + MOD) % MOD;
     }
     cout << dp[n + k - 1];      // Ответ
 }
