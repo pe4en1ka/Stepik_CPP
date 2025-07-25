@@ -25,7 +25,7 @@ int main() {
         dp[i][i] = dp[i - 1][i - 1] + a[i][i];
     }                                           // База
     for (int i = 2; i < n; i++) {
-        for (int k = 1; k <= i; k++) {
+        for (int k = 1; k < i; k++) {
             dp[i][k] = max(dp[i - 1][k], dp[i - 1][k - 1]) + a[i][k];
         }
     }
