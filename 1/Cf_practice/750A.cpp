@@ -11,14 +11,14 @@ int main() {
     int t = 240 - k;
     int l = 0;
     int r = n + 1;
-    while (l < r) {
+    while (l + 1 < r) {
         int mid = (l + r) / 2;
-        if (t > (1 + mid) * mid / 2 * 5) {
+        if (t >= (1 + mid) * mid / 2 * 5) {
             l = mid;
         }
         else {
             r = mid;
         }
     }
-    cout << r << endl;
+    cout << l << endl;
 }
