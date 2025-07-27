@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ull unsigned long long
+
+constexpr int MOD = 1e9 + 9;
 
 int main() {
     ios::sync_with_stdio(false);
@@ -10,7 +11,7 @@ int main() {
     int n, m;
     cin >> n >> m;
     vector <vector <bool>> a(n, vector <bool> (m, false));
-    vector <vector <ull>> dp(n, vector <ull> (m));
+    vector <vector <int>> dp(n, vector <int> (m, 0));
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             int tmp;
@@ -22,25 +23,23 @@ int main() {
     }
     dp[0][0] = 1;
     int ii = 1;
-    while (!a[ii][0]) {
+    while (ii < n && !a[ii][0]) {
         dp[ii][0] = 1;
         ii++;
     }
-    for (int i = ii; i < n; i++) {
-        dp[i][0] = 0;
-    }
     int jj = 1;
-    while (!a[0][jj]) {
+    while (jj < m && !a[0][jj]) {
         dp[0][jj] = 1;
         jj++;
     }
-    for (int i = jj; i < m; i++) {
-        dp[0][i] = 0;
-    }
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            dp[i][j] = ((dp[i-1][j] % MOD + dp[i - 1][j - 1] % MOD) % MOD + dp[i][j - 1] % MOD) % MOD;
+            if (a[i][j]) {
+                dp[i][j] = 0;
+            }
         }
+
     }
+    cout << dp[n-1][m-1] << endl;
 }
