@@ -21,8 +21,24 @@ int main() {
             a[i][0] = 1;
         }
     }
-    for (int k = 0; k < m + n - 1; k++) {
-        int s = max( )
+     for (int k = 0; k < m + n - 1; k++) {
+        int s = max(0,k - m + 1);
+        int e = min(k, n - 1);
+        for (int i = s; i <= e; i++) {
+            int j = k - i;
+            if (i >= 2 && j >= 1) {
+                a[i][j] = (a[i][j] % MOD + a[i - 2][j - 1] % MOD) % MOD;
+                if (j + 1 < m) {
+                    a[i][j] = (a[i][j] % MOD + a[i - 2][j + 1] % MOD) % MOD;
+                }
+            }
+            if (j >= 2 && i >= 1) {
+                a[i][j] = (a[i][j] % MOD + a[i - 1][j - 2] % MOD) % MOD;
+                if (i + 1 < n) {
+                    a[i][j] = (a[i][j] % MOD + a[i + 1][j - 2] % MOD) % MOD;
+                }
+            }
+        }
     }
     cout << a[n - 1][m - 1] << endl;
 }
