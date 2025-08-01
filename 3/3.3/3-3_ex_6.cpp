@@ -11,23 +11,38 @@ int main() {
     int n, m;
     cin >> n >> m;
     vector <vector<int>> a(n, vector<int>(m, 0));
+    vector <vector<int>> le(n, vector<int>(m, 0));
+    vector <vector<int>> up(n, vector<int>(m, 0));
     a[0][0] = 1;
-    a[0][1] = 1;
-    a[1][0] = 1;
+    if (m > 1) {
+        a[0][1] = 1;
+    }
+    if (n > 1) {
+        a[1][0] = 1;
+    }
     for (int i = 2; i < m; i++) {
-        a[0][i] = a[0][i - 1] * 2;
+        a[0][i] = (a[0][i - 1] % MOD * 2) % MOD;
     }
     for (int i = 2; i < n; i++) {
-        a[i][0] = a[i - 1][0] * 2;
+        a[i][0] = (a[i - 1][0] % MOD * 2) % MOD;
     }
+    for (int j = 0; j < n; j++) {
+        le[j][0] = 0;
+        if (j > 0) {
+            up[j][0] = a[j][0];
+        }
+    }
+    for (int i = 0; i < m; i++) {
+        up[0][i] = 0;
+        if (i > 0) {
+            le[0][i] = a[0][i];
+        }
+    }                                   // База
     for (int i = 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
-            for (int k = 0; k < i; k++) {
-                a[i][j] = (a[i][j] % MOD + a[k][j] % MOD) % MOD;
-            }
-            for (int k = 0; k < j; k++) {
-                a[i][j] = (a[i][j] % MOD + a[i][k] % MOD) % MOD;
-            }
+            le[i][j] = (le[i][j - 1] % MOD + a[i][j - 1] % MOD) % MOD;
+            up[i][j] = (up[i - 1][j] % MOD + a[i - 1][j] % MOD) % MOD;
+            a[i][j] = (le[i][j] % MOD + up[i][j] % MOD) % MOD;
         }
     }
     cout << a[n - 1][m - 1] << endl;
