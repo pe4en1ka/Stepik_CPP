@@ -52,8 +52,9 @@ int main() {
         int y = m + 1;
         while (x != 1 && y != 1) {
             r.emplace_back(x, y);
-            x = dp[x][y].first.first;
-            y = dp[x][y].first.second;
+            int old_x = x, old_y = y;
+            x = dp[old_x][old_y].first.first;
+            y = dp[old_x][old_y].first.second;
         }
         cout << dp[n + 1][y + 1].second << " " << r.size() - 1 << '\n';
         for (int i = static_cast<int>(r.size() - 1); i >= 0; i--) {
