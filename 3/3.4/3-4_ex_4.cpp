@@ -15,14 +15,50 @@ int main() {
             cin >> a[i][j];
         }
     }
-    vector <vector <pair<pair<int, int>, ll>>> dp(n + 2, vector <pair<pair<int, int>, ll>>(m + 2, {{0,0}, 1000000100}));
-    dp[2][2] = {{1,1}, a[2][2]};
-    for ( int k = 0; k < n + m + 1; k++) {
-        int s = max(0, k - m + 1);
-        int e = min(k, n - 1);
+    vector <vector <pair<pair<int, int>, ll>>> dp(n + 4, vector <pair<pair<int, int>, ll>>(m + 4, {{0,0}, 1000000100}));
+    dp[2][2] = {{1,1}, a[0][0]};
+    for ( int k = 2; k < n + m + 5; k++) {
+        int s = max(2, k - m - 1);
+        int e = min(k, n + 1);
         for (int i = s; i <= e; i++) {
-            int j = k - i;
-            dp[i][j] = min({dp[i + 2][j + 1].second, dp[i + 2][j - 1]. second, dp[i - 1][j + 2].second, dp})
+            int j = k - i + 2;
+            dp[i][j].second = min({dp[i - 2][j + 1].second, dp[i - 2][j - 1]. second, dp[i - 1][j - 2].second, dp[i + 1][j - 2].second}) + a[i - 2][j - 2];
+            if (dp[i][j].second == dp[i - 2][j + 1].second + a[i - 2][j - 2]) {
+                dp[i][j].first.first = i - 2 - 2;
+                dp[i][j].first.second = j + 1 - 2;
+            }
+            else if (dp[i][j].second == dp[i - 2][j - 1].second + a[i - 2][j - 2]) {
+                dp[i][j].first.first = i - 2 - 2;
+                dp[i][j].first.second = j - 1 - 2;
+            }
+            else if (dp[i][j].second == dp[i - 1][j - 2].second + a[i - 2][j - 2]) {
+                dp[i][j].first.first = i - 1 - 2;
+                dp[i][j].first.second = j - 2 - 2;
+            }
+            else {
+                dp[i][j].first.first = i + 1 - 2;
+                dp[i][j].first.second = j - 2 - 2;
+            }
         }
     }
+    if (dp[n + 1][m + 1].second >= 1000000000) {
+        cout << "NO" << '\n';
+        return 0;
+    }
+    else {
+        cout << "YES" << '\n';
+        vector <pair<int, int>> r;
+        int x = n + 1;
+        int y = m + 1;
+        while (x != 1 && y != 1) {
+            r.emplace_back(x, y);
+            x = dp[x][y].first.first;
+            y = dp[x][y].first.second;
+        }
+        cout << dp[n + 1][y + 1].second << " " << r.size() - 1 << '\n';
+        for (int i = static_cast<int>(r.size() - 1); i >= 0; i--) {
+            cout << r[i].first << " " << r[i].second << '\n';
+        }
+    }
+
 }
