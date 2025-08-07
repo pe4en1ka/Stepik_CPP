@@ -15,33 +15,18 @@ int main() {
             cin >> a[i][j];
         }
     }
-    vector <vector <pair<pair<int, int>, ll>>> dp(n + 4, vector <pair<pair<int, int>, ll>>(m + 4, {{0,0}, 1000000100}));
+    vector <vector <pair<pair<int, int>, ll>>> dp(n, vector <pair<pair<int, int>, ll>>(m, {{0,0}, LLONG_MAX}));
     dp[2][2] = {{1,1}, a[0][0]};
-    for ( int k = 4; k < n + m + 7; k++) {
-        int s = max(2, k - m - 1);
-        int e = min(k, n + 1);
+    for ( int k = 0; k < n + m + 1; k++) {
+        int s = max(0, k - m + 1);
+        int e = min(k, n - 1);
         for (int i = s; i <= e; i++) {
             int j = k - i;
-            dp[i][j].second = min({dp[i - 2][j + 1].second, dp[i - 2][j - 1]. second, dp[i - 1][j - 2].second, dp[i + 1][j - 2].second}) + a[i - 2][j - 2];
-            if (dp[i][j].second == dp[i - 2][j + 1].second + a[i][j]) {
-                dp[i][j].first.first = i - 2;
-                dp[i][j].first.second = j + 1;
-            }
-            else if (dp[i][j].second == dp[i - 2][j - 1].second + a[i][j]) {
-                dp[i][j].first.first = i - 2;
-                dp[i][j].first.second = j - 1;
-            }
-            else if (dp[i][j].second == dp[i - 1][j - 2].second + a[i][j]) {
-                dp[i][j].first.first = i - 1;
-                dp[i][j].first.second = j - 2;
-            }
-            else {
-                dp[i][j].first.first = i + 1;
-                dp[i][j].first.second = j - 2;
-            }
+            dp[i][j].second = min({dp[i - 2][j + 1].second, dp[i - 2][j - 1]. second, dp[i - 1][j - 2].second, dp[i + 1][j - 2].second}) + a[i][j];
+
         }
     }
-    if (dp[n + 1][m + 1].second >= 1000000000) {
+    if (dp[n + 1][m + 1].second > 1000000000) {
         cout << "NO" << '\n';
         return 0;
     }
