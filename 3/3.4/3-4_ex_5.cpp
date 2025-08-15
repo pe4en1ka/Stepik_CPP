@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define ll long long
 
 int main() {
     ios::sync_with_stdio(false);
@@ -8,5 +9,37 @@ int main() {
 
     int n, m;
     cin >> n >> m;
-    
+    vector <vector<int>> a(n, vector<int>(m));
+    vector <vector<ll>> dp(n, vector<ll>(m));
+    vector <vector<ll>> le(n, vector<ll>(m, 0));
+    vector <vector<ll>> up(n, vector<ll>(m, 0));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> a[i][j];
+        }
+    }
+    dp[0][0] = a[0][0];
+    ll min_le = dp[0][0];
+    ll min_up = dp[0][0];
+    for (int i = 1; i < n; i++) {
+        up[i][0] = min_up;
+        dp[i][0] = min_up + a[i][0];
+        if (min_le > dp[i][0]) {
+            min_le = dp[i][0];
+        }
+    }
+    for (int j = 1; j < m; j++) {
+        le[0][j] = min_le;
+        dp[0][j] = min_le + a[0][j];
+        if (min_le > dp[0][j]) {
+            min_le = dp[0][j];
+        }
+    }
+    min_le = dp[1][0];
+    min_up = dp[0][1];
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            dp[i][j] = min(,min_up);
+        }
+    }
 }
