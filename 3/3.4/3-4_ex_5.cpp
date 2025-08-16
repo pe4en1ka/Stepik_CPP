@@ -69,11 +69,18 @@ int main() {
             }
         }
     }
-    for (const auto& i : dp) {
-        for (auto j : i) {
-            cout << j.first << ", " << j.second.first + 1 << " " << j.second.second + 1<< "\t";
-        }
-        cout << endl;
+    vector <pair <ll, ll>> path;
+    int x = n - 1;
+    int y = m - 1;
+    while (x != -1 && y != -1) {
+        path.emplace_back(x, y);
+        int prev_x = x;
+        int prev_y = y;
+        x = dp[prev_x][prev_y].second.first;
+        y = dp[prev_x][prev_y].second.second;
     }
-     
+    cout << dp[n - 1][m - 1].first << " " << path.size()<< endl;
+    for (int i = static_cast<int>(path.size()) - 1; i >= 0; i--) {
+        cout << path[i].first + 1 << " " << path[i].second + 1<< '\n';
+    }
 }
