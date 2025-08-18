@@ -43,9 +43,20 @@ int main() {
   for (int i = 0; i < n - 1; i++) {
     le[i].first = dp[i + 1][0].first;
     le[i].second = 0;
+    if (i < n - 2) {
+      di[i].first = dp[i + 1][0].first;
+      di[i].second = 0;
+    }
   }
   for (int j = 0; j < m - 1; j++) {
     up[j].first = dp[0][j + 1].first;
     up[j].second = 0;
+    if (j < m - 2) {
+      di[j + 2].first = dp[0][j + 1].first;
+      di[j + 2].second = 0;
+    }
   }
+  di[n - 2].first = dp[0][0].first;
+  di[n - 2].second = 0;                   //База
+  
 }
