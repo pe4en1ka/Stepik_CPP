@@ -45,19 +45,25 @@ int main() {
     le[i].second = 0;
     if (i < n - 2) {
       di[i].first = dp[i + 1][0].first;
-      di[i].second = {i, 0};
+      di[i].second = {i + 1, 0};
     }
   }
   for (int j = 0; j < m - 1; j++) {
     up[j].first = dp[0][j + 1].first;
     up[j].second = 0;
     if (j < m - 2) {
-      di[j + 2].first = dp[0][j + 1].first;
-      di[j + 2].second = {0, j + 1};
+      di[j + n - 1].first = dp[0][j + 1].first;
+      di[j + n - 1].second = {0, j + 1};
     }
   }
-  di[n - 2].first = dp[0][0].first;                     //База
-  ll min_di = di[n - 2].first;
+  if (n >= 2) {
+    di[n - 2].first = dp[0][0].first;
+  }
+  else {
+    di[0].first = dp[0][0].first;
+  }
+                      //База
+  ll min_di;
   for (int i = 1; i < n; i++) {
     for (int j = 1; j < m; j++) {
       min_le = le[i - 1].first;
