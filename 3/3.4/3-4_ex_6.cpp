@@ -13,7 +13,7 @@ int main() {
   vector <vector <pair <ll, pair<int, int>>>> dp(n, vector<pair<ll, pair<int, int>>>(m));
   vector <pair<ll, int>> le(n - 1);
   vector <pair<ll, int>> up(m - 1);
-  vector <pair <ll, int>> di(n + m - 3);
+  vector <pair<ll, pair<int, int>>> di(n + m - 3);
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {
       cin >> a[i][j];
@@ -45,7 +45,7 @@ int main() {
     le[i].second = 0;
     if (i < n - 2) {
       di[i].first = dp[i + 1][0].first;
-      di[i].second = 0;
+      di[i].second = {i, 0};
     }
   }
   for (int j = 0; j < m - 1; j++) {
@@ -53,11 +53,10 @@ int main() {
     up[j].second = 0;
     if (j < m - 2) {
       di[j + 2].first = dp[0][j + 1].first;
-      di[j + 2].second = 0;
+      di[j + 2].second = {0, j};
     }
   }
-  di[n - 2].first = dp[0][0].first;
-  di[n - 2].second = 0;                   //База
+  di[n - 2].first = dp[0][0].first;                     //База
   ll min_di = di[n - 2].first;
   for (int i = 1; i < n; i++) {
     for (int j = 1; j < m; j++) {
@@ -66,6 +65,9 @@ int main() {
       min_di = di[-(i - j) + 1].first;
       if (min_le > min_up) {
         best_move = {up[j - 1].second, j};
+        if (min_up > min_di) {
+          best_move = {};
+        }
       }
       else {
         best_move = {i, le[i - 1].second};
