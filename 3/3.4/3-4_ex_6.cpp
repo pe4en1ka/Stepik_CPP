@@ -58,5 +58,18 @@ int main() {
   }
   di[n - 2].first = dp[0][0].first;
   di[n - 2].second = 0;                   //База
-  
+  ll min_di = di[n - 2].first;
+  for (int i = 1; i < n; i++) {
+    for (int j = 1; j < m; j++) {
+      min_le = le[i - 1].first;
+      min_up = up[j - 1].first;
+      min_di = di[-(i - j) + 1].first;
+      if (min_le > min_up) {
+        best_move = {up[j - 1].second, j};
+      }
+      else {
+        best_move = {i, le[i - 1].second};
+      }
+    }
+  }
 }

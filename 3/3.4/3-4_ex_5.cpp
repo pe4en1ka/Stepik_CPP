@@ -47,6 +47,7 @@ int main() {
         up[j].first = dp[0][j + 1].first;
         up[j].second = 0;
     }
+
     for (int i = 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
             min_le = le[i - 1].first;
