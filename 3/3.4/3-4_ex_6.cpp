@@ -53,7 +53,7 @@ int main() {
     up[j].second = 0;
     if (j < m - 2) {
       di[j + 2].first = dp[0][j + 1].first;
-      di[j + 2].second = {0, j};
+      di[j + 2].second = {0, j + 1};
     }
   }
   di[n - 2].first = dp[0][0].first;                     //База
@@ -66,12 +66,43 @@ int main() {
       if (min_le > min_up) {
         best_move = {up[j - 1].second, j};
         if (min_up > min_di) {
-          best_move = {};
+          best_move = di[-(i - j) + 1].second;
         }
       }
       else {
         best_move = {i, le[i - 1].second};
+        if (min_le > min_di) {
+          best_move = di[-(i - j) + 1].second;
+        }
+      }
+      dp[i][j].first = min(min(min_le,min_up), min_di) + a[i][j];
+      dp[i][j].second = best_move;
+      if (min_le > dp[i][j].first) {
+        le[i - 1].first = dp[i][j].first;
+        le[i - 1].second = j;
+      }
+      if (min_up > dp[i][j].first) {
+        up[j - 1].first = dp[i][j].first;
+        up[j - 1].second = i;
+      }
+      if (min_di > dp[i][j].first) {
+        di[-(i - j) + 1].first = dp[i][j].first;
+        di[-(i - j) + 1].second = {i, j};
       }
     }
+  }
+  vector <pair <ll, ll>> path;
+  int x = n - 1;
+  int y = m - 1;
+  while (x != -1 && y != -1) {
+    path.emplace_back(x, y);
+    int prev_x = x;
+    int prev_y = y;
+    x = dp[prev_x][prev_y].second.first;
+    y = dp[prev_x][prev_y].second.second;
+  }
+  cout << dp[n - 1][m - 1].first << " " << path.size()<< endl;
+  for (int i = static_cast<int>(path.size()) - 1; i >= 0; i--) {
+    cout << path[i].first + 1 << " " << path[i].second + 1<< '\n';
   }
 }
