@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
+constexpr ll INF = LLONG_MAX;
 
 int main() {
   ios::sync_with_stdio(false);
@@ -9,91 +10,64 @@ int main() {
 
   int n, m;
   cin >> n >> m;
-  vector <vector <int>> a(n, vector<int>(m));
-  vector <vector <pair <ll, pair<int, int>>>> dp(n, vector<pair<ll, pair<int, int>>>(m));
-  vector <pair<ll, int>> le(n - 1);
-  vector <pair<ll, int>> up(m - 1);
-  vector <pair<ll, pair<int, int>>> di(n + m - 3);
+  vector <vector <ll>> a(n, vector<ll>(m));
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {
       cin >> a[i][j];
     }
   }
+  vector <vector <pair <ll, pair<int, int>>>> dp(n, vector<pair<ll, pair<int, int>>>(m, {INF,{-1, -1}}));
+  vector <pair<ll, pair<int, int>>> le(n, {INF,{-1, -1}});
+  vector <pair<ll, pair<int, int>>> up(m, {INF,{-1, -1}});
+  int di_s = n + m - 1;
+  vector <pair<ll, pair<int, int>>> di(di_s, {INF,{-1, -1}});
+
   dp[0][0] = {a[0][0], {-1, -1}};
-  ll min_le = dp[0][0].first;
-  ll min_up = min_le;
-  pair <int, int> best_move = {0, 0};
-  for (int i = 1; i < n; i++) {
-    dp[i][0].first = min_up + a[i][0];
-    dp[i][0].second = best_move;
-    if (min_up > dp[i][0].first) {
-      min_up = dp[i][0].first;
-      best_move = {i, 0};
-    }
-  }
-  best_move = {0, 0};
-  for (int j = 1; j < m; j++) {
-    dp[0][j].first = min_le + a[0][j];
-    dp[0][j].second = best_move;
-    if (min_le > dp[0][j].first) {
-      min_le = dp[0][j].first;
-      best_move = {0, j};
-    }
-  }
-  for (int i = 0; i < n - 1; i++) {
-    le[i].first = dp[i + 1][0].first;
-    le[i].second = 0;
-    if (i < n - 2) {
-      di[i].first = dp[i + 1][0].first;
-      di[i].second = {i + 1, 0};
-    }
-  }
-  for (int j = 0; j < m - 1; j++) {
-    up[j].first = dp[0][j + 1].first;
-    up[j].second = 0;
-    if (j < m - 2) {
-      di[j + n - 1].first = dp[0][j + 1].first;
-      di[j + n - 1].second = {0, j + 1};
-    }
-  }
-  if (n >= 2) {
-    di[n - 2].first = dp[0][0].first;
-  }
-  else {
-    di[0].first = dp[0][0].first;
-  }
-                      //База
-  ll min_di;
-  for (int i = 1; i < n; i++) {
-    for (int j = 1; j < m; j++) {
-      min_le = le[i - 1].first;
-      min_up = up[j - 1].first;
-      min_di = di[-(i - j) + 1].first;
-      if (min_le > min_up) {
-        best_move = {up[j - 1].second, j};
-        if (min_up > min_di) {
-          best_move = di[-(i - j) + 1].second;
+  le[0] = {a[0][0], {0, 0}};
+  up[0] = {a[0][0], {0, 0}};
+  int d = 0;
+  int idx = d + (m - 1);
+  di[idx] = {a[0][0], {0, 0}};
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (i == 0 && j == 0) {
+        continue;
+      }
+      ll cost = a[i][j];
+      d = i - j;
+      idx = d + (m - 1);
+
+      if (le[i].first != INF) {
+        ll candidate = le[i].first + cost;
+        if (candidate < dp[i][j].first) {
+          dp[i][j].first = candidate;
+          dp[i][j].second = le[i].second;
         }
       }
-      else {
-        best_move = {i, le[i - 1].second};
-        if (min_le > min_di) {
-          best_move = di[-(i - j) + 1].second;
+      if (up[j].first != INF) {
+        ll candidate = up[j].first + cost;
+        if (candidate < dp[i][j].first) {
+          dp[i][j].first = candidate;
+          dp[i][j].second = up[j].second;
         }
       }
-      dp[i][j].first = min(min(min_le,min_up), min_di) + a[i][j];
-      dp[i][j].second = best_move;
-      if (min_le > dp[i][j].first) {
-        le[i - 1].first = dp[i][j].first;
-        le[i - 1].second = j;
+      if (di[idx].first != INF) {
+        ll candidate = di[idx].first + cost;
+        if (candidate < dp[i][j].first) {
+          dp[i][j].first = candidate;
+          dp[i][j].second = di[idx].second;
+        }
       }
-      if (min_up > dp[i][j].first) {
-        up[j - 1].first = dp[i][j].first;
-        up[j - 1].second = i;
+
+      if (dp[i][j].first < le[i].first) {
+        le[i] = {dp[i][j].first, {i, j}};
       }
-      if (min_di > dp[i][j].first) {
-        di[-(i - j) + 1].first = dp[i][j].first;
-        di[-(i - j) + 1].second = {i, j};
+      if (dp[i][j].first < up[j].first) {
+        up[j] = {dp[i][j].first, {i, j}};
+      }
+      if (dp[i][j].first < di[idx].first) {
+        di[idx] = {dp[i][j].first, {i, j}};
       }
     }
   }
@@ -102,13 +76,14 @@ int main() {
   int y = m - 1;
   while (x != -1 && y != -1) {
     path.emplace_back(x, y);
-    int prev_x = x;
-    int prev_y = y;
-    x = dp[prev_x][prev_y].second.first;
-    y = dp[prev_x][prev_y].second.second;
+    pair<int, int> prev = dp[x][y].second;
+    x = prev.first;
+    y = prev.second;
   }
-  cout << dp[n - 1][m - 1].first << " " << path.size()<< endl;
-  for (int i = static_cast<int>(path.size()) - 1; i >= 0; i--) {
-    cout << path[i].first + 1 << " " << path[i].second + 1<< '\n';
+  reverse(path.begin(), path.end());
+
+  cout << dp[n-1][m-1].first << " " << path.size() << "\n";
+  for (auto q : path) {
+    cout << q.first + 1 << " " << q.second + 1 << "\n";
   }
 }
