@@ -13,5 +13,6 @@ int main() {
     vector <ll> a(n);
     for (int i = k; i < n + k; i++) cin >> a[i];
     vector <pair <ll, int>> dp(n, {INF,-1});
-
+    vector <pair <ll, int>> win(k, {0, -1});
+    
 }
