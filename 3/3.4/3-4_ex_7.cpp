@@ -13,5 +13,5 @@ int main() {
     vector <ll> a(n);
     for (int i = k; i < n + k; i++) cin >> a[i];
     vector <pair <ll, int>> dp(n, {INF,-1});
-    
+
 }
