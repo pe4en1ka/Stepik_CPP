@@ -13,9 +13,5 @@ int main() {
     vector <ll> a(n);
     for (int i = k; i < n + k; i++) cin >> a[i];
     vector <pair <ll, int>> dp(n, {INF,-1});
-    vector <pair <ll, int>> win(k, {0, -1});
-    win[k - 1].first = a[0];
-    for (int i = 1; i < n; i++) {
-        ll mi = min(win)
-    }
+    
 }
