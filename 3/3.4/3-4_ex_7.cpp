@@ -12,6 +12,8 @@ int main() {
     cin >> n >> k;
     vector <ll> a(n);
     for (int i = k; i < n + k; i++) cin >> a[i];
-    vector <pair <ll, int>> dp(n, {INF,-1});
-    
+    vector <ll> dp(n, INF);
+    deque <ll> q;
+    dp[0] = a[0];
+
 }
