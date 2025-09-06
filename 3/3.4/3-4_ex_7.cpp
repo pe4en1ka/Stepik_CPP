@@ -24,16 +24,21 @@ int main() {
         if (i < k) {
             prev[i] = (0 > dp[q.back()]) ? q.back() : -1;
             dp[i] = (prev[i] == -1) ? a[i] : a[i] + dp[q.back()];
-            ll j = (dp[q.back()] < dp[i]) ? q.ba
-
-        }
-        dp[i] = a[i] + dp[q.front()];
-        prev[i] = q.front();
-
-        while (!q.empty() && dp[q.back()] >= dp[i]) {
+            ll j = (dp[q.back()] < dp[i]) ? q.back() : i;
             q.pop_back();
+            q.push_back(j);
         }
-        q.push_back(i);
+        else {
+            while (!q.empty() && q.front() < i - k) {
+                q.pop_front();
+            }
+            dp[i] = a[i] + dp[q.front()];
+            prev[i] = q.front();
+            while (!q.empty() && dp[q.back()] >= dp[i]) {
+                q.pop_back();
+            }
+            q.push_back(i);
+        }
     }
 
     vector <ll> path;
