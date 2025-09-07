@@ -23,7 +23,7 @@ int main() {
     }
     for (int we = s; we >= 0; we--) {
         if (dp[n][we] == 1) {
-            cout << we << "\n";
+            cout << we << " ";
             return 0;
         }
     }
