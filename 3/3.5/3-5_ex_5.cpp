@@ -17,5 +17,5 @@ int main() {
         cin >> c[i];
     }
 
-    vector <pair <int, pair<int, int>>> loc;
+    
 }
