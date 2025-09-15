@@ -9,12 +9,12 @@ int main() {
 
     int s, n;
     cin >> s >> n;
-    vector <int> w(n);
-    vector <int> c(n);
-    for (int i = 0; i < n; i++) {
+    vector <int> w(n + 1);
+    vector <int> c(n + 1);
+    for (int i = 1; i <= n; i++) {
         cin >> w[i];
     }
-    for (int i = 0; i < n; i++) {
+    for (int i = 1; i <= n; i++) {
         cin >> c[i];
     }
 

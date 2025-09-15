@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define ld long double
 
-bool comppair(const pair<int, int> &a, const pair<int, int> &b) {
+bool comppair(const pair<ld, int> &a, const pair<ld, int> &b) {
     return a.first > b.first;
 }
 
@@ -20,32 +21,37 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> c[i];
     }
-    int cnt = 0, wei = 0;
-    for (int i = 0; i < n; i++) {
+    ld cnt = 0;
+    int wei = 0;
+    for (int i = 0; i < static_cast<int>(w.size()); i++) {
         if (w[i] == 0) {
-            cnt++;
-            w.erase(w.begin() + i - 1);
-            c.erase(c.begin() + i - 1);
+            cnt += c[i];
+            w.erase(w.begin() + i);
+            c.erase(c.begin() + i);
         }
     }
 
-    vector <pair <long double, int>> ben;
-    for (int i = 0; i < n; i++) {
-        ben.push_back({static_cast<double>(c[i] / w[i]), i});
+    vector <pair <ld, int>> ben;
+    for (int i = 0; i < static_cast<int>(w.size()); i++) {
+        ben.emplace_back((static_cast<ld>(c[i]) / w[i]), i);
     }
     sort(ben.begin(), ben.end(), comppair);
 
-    for (int i = 0; i < static_cast<int>(ben.size()); i++) {
-        int cur_w = w[ben[i].second];
-        int cur_c = c[ben[i].second];
+    for (auto & i : ben) {
+        int cur_w = w[i.second];
+        int cur_c = c[i.second];
         if (s >= wei + cur_w ) {
-            cnt += cur_c;
+            cnt += static_cast<ld>(cur_c);
             wei += cur_w;
         }
-        else {
+        else if (s > wei) {
             int part = s - wei;
-            cnt +=  cur_c * (part / cur_w);
+            cnt +=  static_cast<ld>(cur_c) * (static_cast<ld>(part) / cur_w);
+            wei += part;
+        }
+        else {
+            break;
         }
     }
-    cout << ceil(cnt) << endl;
+    cout << static_cast<int>(ceil(cnt)) << endl;
 }
