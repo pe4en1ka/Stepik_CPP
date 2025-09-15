@@ -20,26 +20,32 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> c[i];
     }
-
-    for (int i = 0; i < n; i++) {
-        
-    }
-
-    vector <pair <long double, int>> ben(n);
-    for (int i = 0; i < n; i++) {
-        ben[i].first = static_cast<double>(c[i] / w[i]);
-        ben[i].second = i;
-    }
-    sort(ben.begin(), ben.end(), comppair);
     int cnt = 0, wei = 0;
     for (int i = 0; i < n; i++) {
+        if (w[i] == 0) {
+            cnt++;
+            w.erase(w.begin() + i - 1);
+            c.erase(c.begin() + i - 1);
+        }
+    }
+
+    vector <pair <long double, int>> ben;
+    for (int i = 0; i < n; i++) {
+        ben.push_back({static_cast<double>(c[i] / w[i]), i});
+    }
+    sort(ben.begin(), ben.end(), comppair);
+
+    for (int i = 0; i < static_cast<int>(ben.size()); i++) {
         int cur_w = w[ben[i].second];
         int cur_c = c[ben[i].second];
         if (s >= wei + cur_w ) {
             cnt += cur_c;
+            wei += cur_w;
         }
         else {
-
+            int part = s - wei;
+            cnt +=  cur_c * (part / cur_w);
         }
     }
+    cout << ceil(cnt) << endl;
 }
