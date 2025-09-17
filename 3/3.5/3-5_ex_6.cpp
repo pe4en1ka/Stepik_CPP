@@ -1,34 +1,35 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
-constexpr int INF = LLONG_MAX;
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    int S, n;
+    cin >> S >> n;
+    vector<int> weights(n);
+    vector<int> costs(n);
 
-    int s, n;
-    cin >> s >> n;
-    vector <int> w(n + 1);
-    vector <int> c(n + 1);
+    for (int i = 0; i < n; i++) {
+        cin >> weights[i];
+    }
+    for (int i = 0; i < n; i++) {
+        cin >> costs[i];
+    }
+
+    vector<vector<int>> dp(n + 1, vector<int>(S + 1, 0));
+
     for (int i = 1; i <= n; i++) {
-        cin >> w[i];
-    }
-    for (int i = 1; i <= n; i++) {
-        cin >> c[i];
+        for (int j = 1; j <= S; j++) {
+            if (weights[i - 1] <= j) {
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weights[i - 1]] + costs[i - 1]);
+            } else {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
     }
 
-    vector <vector<int>> dp(n + 1, vector<int>(s + 1,-INF ));
-    dp[0][0] = 0;
+    cout << dp[n][S] << endl;
 
-     for (int i = 1; i <= n; i++) {
-         for (int j = 0; j <= s; j++) {
-             dp[i][j] = (j >= w[i]) ? max(dp[i - 1][j],dp[i - 1][j - w[i]] + c[i]) : dp[i - 1][j];
-         }
-     }
-    int ans = 0;
-    for (int j = 0; j <= s; j++) {
-        ans = max(ans, dp[n][j]);
-    }
-    cout << ans << endl;
+    return 0;
 }
