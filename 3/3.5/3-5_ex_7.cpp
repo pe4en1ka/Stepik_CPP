@@ -18,10 +18,16 @@ int main() {
     }
 
     vector <vector <int>> dp(n + 1, vector <int> (s + 1, 0));
-
+    vector <int> path;
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= s; j++) {
-
+            if (weight[i - 1] <= j) {
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weight[i - 1]] + cost[i - 1]);
+            } else {
+                dp[i][j] = dp[i - 1][j];
+            }
         }
     }
+
+    cout << dp[n][s] << " " << path.size() << endl;
 }
