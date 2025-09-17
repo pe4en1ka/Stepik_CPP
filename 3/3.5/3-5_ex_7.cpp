@@ -28,6 +28,25 @@ int main() {
             }
         }
     }
-
+    int max_cost = 0;
+    int best_j = 0;
+    for (int j = 0; j <= s; j++) {
+        if (dp[n][j] > max_cost) {
+            max_cost = dp[n][j];
+            best_j = j;
+        }
+    }
+    int i = n;
+    int j = best_j;
+    while (i > 0 && j > 0) {
+        if (dp[i][j] != dp[i - 1][j]) {
+            path.push_back(i);
+            j -= weight[i - 1];
+        }
+        i--;
+    }
     cout << dp[n][s] << " " << path.size() << endl;
+    for (int q = static_cast<int>(path.size()) - 1; q >= 0; q--) {
+        cout << path[q] << " ";
+    }
 }
