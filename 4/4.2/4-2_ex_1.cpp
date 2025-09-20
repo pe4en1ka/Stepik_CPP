@@ -2,16 +2,17 @@
 using namespace std;
 
 int cnt = 0;
-void dfs(int v, vector<bool> &us, map<int, set<int>> &lg) {
+void dfs(int v, vector<bool> &us, map<int, set<int>> &lg, vector<int> &path) {
     us[v - 1] = true;
-    cout << v << " ";
+    path.push_back(v);
     cnt++;
     for (auto u : lg[v]) {
         if (us[u - 1]) {
             continue;
         }
-        dfs(u, us, lg );
-        cout << v << " ";
+        dfs(u, us, lg, path);
+        path.push_back(v);
+        cnt++;
     }
 }
 
@@ -29,5 +30,10 @@ int main() {
     }
     int start; cin >> start;
     vector <bool> used(n, false);
-    dfs(start, used, l_graph);
+    vector <int> path;
+    dfs(start, used, l_graph, path);
+    cout << cnt << endl;
+    for (auto i: path) {
+        cout << i << " ";
+    }
 }
