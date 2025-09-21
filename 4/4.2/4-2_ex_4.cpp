@@ -1,20 +1,19 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void dfs(int v, vector <vector <int>> const &lg, vector <pair<int, int>> const &ed, vector <bool> &vis, int anc, vector <int> &tt) {
-    vis[v - 1] = true;
-    for (int i = 1; i < ed.size(); i++) {
-        int x = v, y = anc;
-        if (ed[i].first == x && ed[i].second == y || ed[i].first == y && ed[i].second == x) {
-            tt.push_back(i);
-            break;
-        }
-    }
-    for (auto u : lg[v]) {
-        if (vis[u - 1]) {
+bool comp_for_vertexes(pair<int, int> const &a, pair<int, int> const &b) {
+    return a.first < b.first;
+}
+
+void dfs(int v, vector <vector <pair<int, int>>> const &lg, vector <bool> &vis, vector <int> &tt) {
+    vis[v] = true;
+    for (auto p : lg[v]) {
+        int u = p.first, i = p.second;
+        if (vis[u]) {
             continue;
         }
-        dfs(u, lg, ed, vis, v, tt);
+        tt.push_back(i);
+        dfs(u, lg, vis, tt);
     }
 }
 
@@ -24,20 +23,18 @@ int main() {
     cout.tie(nullptr);
 
     int n, m; cin >> n >> m;
-    vector <vector <int>> l_graph(n + 1);
-    vector <pair<int, int>> edges(m + 1);
-    vector <bool> visited(n);
+    vector <vector <pair<int, int>>> l_graph(n + 1);
+    vector <bool> visited(n + 1, false);
     for (int i = 0; i < m; i++) {
         int x, y; cin >> x >> y;
-        l_graph[x].push_back(y);
-        l_graph[y].push_back(x);
-        edges[i + 1] = {x, y};
+        l_graph[x].emplace_back(y, i + 1);
+        l_graph[y].emplace_back(x, i + 1);
     }
     for (int i = 1; i <= n; i++) {
-        sort(l_graph[i].begin(), l_graph[i].end());
+        sort(l_graph[i].begin(), l_graph[i].end(), comp_for_vertexes);
     }
     vector <int> tree_traversal;
-    dfs(1, l_graph, edges, visited, -1, tree_traversal);
+    dfs(1, l_graph, visited, tree_traversal);
     cout << n - 1 << endl;
     for (auto i : tree_traversal) {
         cout << i << " ";
