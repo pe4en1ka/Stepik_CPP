@@ -7,13 +7,14 @@ void dfs(int v, vector <vector <int>> const &lg, vector <pair<int, int>> const &
         int x = v, y = anc;
         if (ed[i].first == x && ed[i].second == y || ed[i].first == y && ed[i].second == x) {
             tt.push_back(i);
+            break;
         }
     }
     for (auto u : lg[v]) {
         if (vis[u - 1]) {
             continue;
         }
-        dfs(u, lg,  ed, v, tt);
+        dfs(u, lg, ed, vis, v, tt);
     }
 }
 
@@ -30,10 +31,15 @@ int main() {
         int x, y; cin >> x >> y;
         l_graph[x].push_back(y);
         l_graph[y].push_back(x);
-        edges.push_back({x, y});
+        edges[i + 1] = {x, y};
     }
-    for (auto i : l_graph) {
-        sort(i.begin(), i.end());
+    for (int i = 1; i <= n; i++) {
+        sort(l_graph[i].begin(), l_graph[i].end());
     }
     vector <int> tree_traversal;
+    dfs(1, l_graph, edges, visited, -1, tree_traversal);
+    cout << n - 1 << endl;
+    for (auto i : tree_traversal) {
+        cout << i << " ";
+    }
 }
