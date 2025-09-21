@@ -7,6 +7,5 @@ int main() {
     cout.tie(nullptr);
 
     int n, m; cin >> n >> m;
-    map<int, set<int>> l_graph;
-
+    cout << n - 1;
 }
