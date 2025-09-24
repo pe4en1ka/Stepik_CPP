@@ -37,5 +37,5 @@ int main() {
         }
     }
 
-    cout << "NO";
+    cout << (cycle_found ? "YES" : "NO");
 }
