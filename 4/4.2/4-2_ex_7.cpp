@@ -3,6 +3,19 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void cycle_dfs(int v, vector <vector <int>> &al, vector <int> &c, bool &cf) {
+    c[v] = 'g';
+    for (auto u : al[v]) {
+        if (c[u] == 'g') {
+            cf = true;
+        }
+        if (c[u] == 'w') {
+            cycle_dfs(u, al, c, cf);
+        }
+    }
+    c[v] = 'b';
+}
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -16,4 +29,5 @@ int main() {
         adj_l[u].push_back(v);
     }
     vector <char> color(n + 1, 'w');
+    bool cycle_found = false;
 }
