@@ -3,7 +3,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool dfs(int v, vector <vector <int>>& al,  )
+void dfs(const int v, const int a, vector <vector <int>> const &al, vector <int> &vis) {
+    vis[v] = true;
+    for (auto u : al[v]) {
+        if (u == a) continue;
+        dfs(u, v, al, vis);
+    }
+    
+}
 
 int main() {
     ios::sync_with_stdio(false);
@@ -21,13 +28,12 @@ int main() {
         sort(adj_l[i].begin(), adj_l[i].end());
     }
 
-    vector <int> tin(n + 1), tout(n + 1), parent(n + 1), cycle;
+    vector <int> tin(n + 1), tout(n + 1), cycle;
     vector <bool> visited(n + 1);
+    int timer = 0;
     for (int i = 1; i <= n; i++) {
         if (!visited[i]) {
-            if () {
-                break;
-            }
+            dfs()
         }
     }
 }
