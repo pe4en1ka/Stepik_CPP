@@ -43,7 +43,7 @@ int main() {
     vector <int> cycle(n + 1);
 
     for (int i = 1; i <= n; i++) {
-        if (color[i]) {
+        if (color[i] == 'w') {
             if (cycle_dfs(i, adj_l, color, parent, cycle)) {
                 break;
             }
