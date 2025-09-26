@@ -11,9 +11,16 @@ bool dfs(int v, vector <vector <int>> &al, vector <int> &c, vector <int> &pa, ve
             if (dfs(u, al, c, pa, cy)) return true;
         }
         else if (c[u] == 1) {
-            cy.push_back(v);
+            for (int cur = v; cur != u; cur = pa[cur]) {
+                cy.push_back(cur);
+            }
+            cy.push_back(u);
+            reverse(cy.begin(), cy.end());
+            return true;
         }
     }
+    c[v] = 2;
+    return false;
 }
 
 int main() {
@@ -35,6 +42,16 @@ int main() {
             if (dfs(i, adj_l, color, parent, cycle)) {
                 break;
             }
+        }
+    }
+    if (cycle.empty()) {
+        cout << "NO" << endl;
+    }
+    else {
+        cout << "YES" << endl;
+        cout << cycle.size() << endl;
+        for (auto x : cycle) {
+            cout << x << " ";
         }
     }
 }
