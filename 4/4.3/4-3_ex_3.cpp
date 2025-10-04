@@ -27,6 +27,10 @@ int main() {
         qv.pop();
         for (auto ch : step) {
             int nx = ch.first + x, ny = ch.second + y;
+            if (!check(nx, ny) || dist[nx][ny] != -1) continue;
+            dist[nx][ny] = dist[x][y] + 1;
+            qv.push({nx, ny});
         }
     }
+    cout << dist[x2][y2] << endl;
 }
