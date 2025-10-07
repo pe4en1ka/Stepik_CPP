@@ -12,23 +12,22 @@ int main() {
     cout.tie(nullptr);
 
     int n, m; cin >> n >> m;
-    vector <vector <int>> walls(2 * n + 1 + 1, vector <int>(2 * m + 1));
-    vector <vector <int>> dist(2 * n + 1 + 1, vector <int>(2 * m + 1, -1));
-    vector <vector <pair<int, int>>> par(2 * n + 1 + 1, vector <pair <int, int>> (2 * m + 1, {0, 0}));
+    vector <vector <int>> walls(2 * n + 1 + 1, vector <int>(2 * m + 1 + 1));
+    vector <vector <int>> dist(2 * n + 1 + 1, vector <int>(2 * m + 1 + 1, -1));
+    vector <vector <pair<int, int>>> par(2 * n + 1 + 1, vector <pair <int, int>> (2 * m + 1 + 1, {0, 0}));
     string s;
     getline(cin, s);
     for (int i = 1; i <= 2 * n + 1; i++) {
         getline(cin, s);
         for (auto j = 0; j < s.length(); j++) {
             char c = s[j];
-            if (c == 'D') {ducks.emplace_back(i, j + 1); walls[i][j + 1] = 0;}
-            if (c == 'S') {stock = {i, j + 1}; walls[i][j + 1] = 0;}
+            if (c == 'D') {ducks.emplace_back(i, j + 1); walls[i][j + 1] = 5;}
+            if (c == 'S') {stock = {i, j + 1}; walls[i][j + 1] = 4;}
             if (c == '|') walls[i][j + 1] = 1;
             if (c == '-') walls[i][j + 1] = 2;
             if (c == '+') walls[i][j + 1] = 3;
             if (c == ' ') walls[i][j + 1] = 0;
         }
-        cout << s << endl;
     }
     int x2 = stock.first, y2 = stock.second;
     auto next_ceil = [&](const int &x, const int &y, const char &drctn) {
@@ -36,21 +35,29 @@ int main() {
             for (int i = x; i >= 1; i--) {
                 if (walls[i][y] == 2 || walls[i][y] == 3) {pair <int, int> p = {i + 1, y}; return p;}
             }
+            pair <int, int> p = {2, y};
+            return p;
         }
         else if (drctn == 'r') {
             for (int j = y; j <= 2 * m + 1; j++) {
                 if (walls[x][j] == 1 || walls[x][j] == 3) {pair <int, int> p = {x, j - 1}; return p;}
             }
+            pair <int, int> p = {x, 2 * m + 1};
+            return p;
         }
         else if (drctn == 'd') {
             for (int i = x; i <= 2 * n + 1; i++) {
                 if (walls[i][y] == 2 || walls[i][y] == 3) {pair <int, int> p = {i - 1, y}; return p;}
             }
+            pair <int, int> p = {2 * n + 1, y};
+            return p;
         }
         else {
             for (int j = y; j >= 1; j--) {
                 if (walls[x][j] == 1 || walls[x][j] == 3) {pair <int, int> p = {x, j + 1}; return p;}
             }
+            pair <int, int> p = {x, 2};
+            return p;
         }
     };
     auto dfs = [&](const pair <int, int> &ceil) {
@@ -75,5 +82,14 @@ int main() {
     };
     for (auto duck : ducks) {
         dfs(duck);
+    }
+    for (int i = 1; i <= 2 * n + 1; i++) {
+        for (int j = 1; j <= 2 * m + 1; j++) {
+            int z = walls[i][j];
+            if (z == 0) cout << " ";
+            else if (z == 1) cout << "|";
+            else if (z == 2) cout << "-";
+            else if (z == 3) cout << "+";
+        }
     }
 }
