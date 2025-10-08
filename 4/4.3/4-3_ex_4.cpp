@@ -60,7 +60,7 @@ int main() {
             return p;
         }
     };
-    auto dfs = [&](const pair <int, int> &ceil) {
+    auto bfs = [&](const pair <int, int> &ceil) {
         int x1 = ceil.first, y1 = ceil.second;
         queue <pair <int, int>> q;
         dist[x1][y1] = 0;
@@ -73,6 +73,7 @@ int main() {
             for (char d : dir) {
                 pair <int, int> nc = next_ceil(x, y, d);
                 int nx = nc.first, ny = nc.second;
+                if ((nx == x && ny == y) || dist[nx][ny] != -1) continue;
                 dist[nx][ny] = dist[x][y] + 1;
                 par[nx][ny] = {x, y};
                 q.emplace(nx, ny);
@@ -81,7 +82,7 @@ int main() {
         if (dist[x2][y2] == -1) walls[x2][y2] = 0;
     };
     for (auto duck : ducks) {
-        dfs(duck);
+        bfs(duck);
     }
     for (int i = 1; i <= 2 * n + 1; i++) {
         for (int j = 1; j <= 2 * m + 1; j++) {
@@ -90,6 +91,9 @@ int main() {
             else if (z == 1) cout << "|";
             else if (z == 2) cout << "-";
             else if (z == 3) cout << "+";
+            else if (z == 4) cout << "S";
+            else if (z == 5) cout << "D";
         }
+        cout << endl;
     }
 }
